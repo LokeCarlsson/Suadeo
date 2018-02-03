@@ -3,15 +3,14 @@ package suadeo;
 import java.util.HashMap;
 import java.util.Map;
 
-class User {
+class Movie {
     private int id;
     private String name;
-    HashMap<Integer, Double> ratings;
+    private Map<Integer, Double> ratings = new HashMap<>();
 
-    User(int id, String name) {
+    Movie(int id, String name) {
         this.id = id;
         this.name = name;
-        this.ratings = new HashMap<>();
     }
 
     int getId() {
@@ -22,12 +21,9 @@ class User {
         return name;
     }
 
-    void addRating(int movieId, double rating) {
-        ratings.put(movieId, rating);
-    }
 
-    Double getRating(Integer id) {
-        return ratings.get(id);
+    void addRating(int userId, double rating) {
+        ratings.put(userId, rating);
     }
 
     Map<Integer, Double> getRatings() {
