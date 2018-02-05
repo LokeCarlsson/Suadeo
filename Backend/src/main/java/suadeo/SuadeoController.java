@@ -25,7 +25,7 @@ public class SuadeoController {
             generator.generateUsers();
         }
 
-        recomender = new Recomender(users);
+        recomender = new Recomender(movies, users);
     }
 
     @CrossOrigin(origins = "http://localhost:8080")
@@ -84,7 +84,16 @@ public class SuadeoController {
     }
 
     @RequestMapping("/euclidean/item")
-    public int itemEuclidean(@RequestParam(value="user", defaultValue="") int user) throws IOException, URISyntaxException {
-        return recomender.itemEuclidean(user).size();
+    public String itemEuclidean(@RequestParam(value="user", defaultValue="") int user) throws IOException, URISyntaxException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{ \"payload\": [");
+        for (Map.Entry<String, Double> score : recomender.itemEuclidean(user).entrySet()) {
+            sb.append("{\"movie\": \"").append(score.getKey().replace("\"","")).append("\", ");
+            sb.append("\"rating\": ").append(score.getValue());
+            sb.append(" }, ");
+        }
+        sb.deleteCharAt(sb.length() - 2);
+        sb.append("]}");
+        return sb.toString();
     }
 }
