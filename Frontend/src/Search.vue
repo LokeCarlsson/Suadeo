@@ -29,7 +29,6 @@
           <td class="text-xs-right">{{ props.item.rating }}</td>
         </template>
       </v-data-table>
-
       <v-data-table
           v-show="currentMovieRecommendations.length"
           v-bind:headers="movieHeaders"
