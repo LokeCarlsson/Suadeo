@@ -17,9 +17,9 @@
         </v-chip>
       </v-layout>
         <v-data-table
-          v-show="currentUserRatings.length"
+          v-show="currentUserRecommendations.length"
           v-bind:headers="headers"
-          :items="currentUserRatings"
+          :items="currentUserRecommendations"
           hide-actions
           class="elevation-5 dataTable"
         >
@@ -29,9 +29,22 @@
           <td class="text-xs-right">{{ props.item.rating }}</td>
         </template>
       </v-data-table>
+
+      <v-data-table
+          v-show="currentMovieRecommendations.length"
+          v-bind:headers="movieHeaders"
+          :items="currentMovieRecommendations"
+          hide-actions
+          class="elevation-5 dataTable"
+        >
+        <template slot="items" slot-scope="props">
+          <td class="text-xs-right">{{ props.item.movie }}</td>
+          <td class="text-xs-right">{{ props.item.rating }}</td>
+        </template>
+      </v-data-table>
         <ul class="list">
           <li v-for="(res, i) in users" :key="i">
-              <a href="#" v-on:click="fetchUserRating(res.id)">{{ res.username }}</a>
+              <a href="#" v-on:click="fetchUserBasedEuclidean(res.id)">{{ res.username }}</a>
           </li>
         </ul>
     </v-layout>
@@ -48,9 +61,14 @@ export default {
         { text: 'Name', value: 'name' },
         { text: 'Rating', value: 'rating' },
       ],
+      movieHeaders: [
+        { text: 'Movie', value: 'movie' },
+        { text: 'Rating', value: 'rating' },
+      ],
       users: [],
       currentUser: null,
-      currentUserRatings: [],
+      currentUserRecommendations: [],
+      currentMovieRecommendations: [],
       disabled: false
     }
   },
@@ -58,7 +76,8 @@ export default {
     fetchUsers () {
       this.disabled = true
       this.currentUser = null,
-      this.currentUserRatings = []
+      this.currentUserRecommendations = []
+      this.currentMovieRecommendations = []
       axios.get(`http://localhost:2525/users`)
       .then(response => {
         this.users = []
@@ -69,18 +88,29 @@ export default {
         });
       })
     },
-    fetchUserRating (id) {
-      axios.get(`http://localhost:2525/ratings?user=${id}`)
+    fetchUserBasedEuclidean(id) {
+      axios.get(`http://localhost:2525/euclidean/user?user=${id}`)
       .then(response => {
         this.users = []
         this.currentUser = id
         this.disabled = false
         console.log(response)
         response.data.payload.forEach(element => {
-          this.currentUserRatings.push(element)
+          this.currentUserRecommendations.push(element)
         });
       })
-    }
+
+      axios.get(`http://localhost:2525/euclidean/item?user=${id}`)
+      .then(response => {
+        this.users = []
+        this.currentUser = id
+        this.disabled = false
+        console.log(response)
+        response.data.payload.forEach(element => {
+          this.currentMovieRecommendations.push(element)
+        });
+      })
+    },
   }
 }
 </script>

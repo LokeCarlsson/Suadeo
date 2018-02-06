@@ -46,12 +46,6 @@ public class SuadeoController {
     }
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @RequestMapping("/recommendations")
-    public String usersRatings() throws IOException {
-        return "hej";
-    }
-
-    @CrossOrigin(origins = "http://localhost:8080")
     @RequestMapping("/ratings")
     public String ratings(@RequestParam(value="user", defaultValue="") int userId) throws IOException {
 
@@ -69,12 +63,14 @@ public class SuadeoController {
         return sb.toString();
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @RequestMapping("/euclidean/user")
     public String userEuclidean(@RequestParam(value="user", defaultValue="") int user) throws IOException, URISyntaxException {
         StringBuilder sb = new StringBuilder();
         sb.append("{ \"payload\": [");
         for (Map.Entry<Integer, Double> score : recomender.userEuclidean(user).entrySet()) {
             sb.append("{\"id\": ").append(score.getKey()).append(", ");
+            sb.append("\"name\": \"").append("User").append(score.getKey().toString()).append("\", ");
             sb.append("\"rating\": ").append(score.getValue());
             sb.append(" }, ");
         }
@@ -83,6 +79,7 @@ public class SuadeoController {
         return sb.toString();
     }
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @RequestMapping("/euclidean/item")
     public String itemEuclidean(@RequestParam(value="user", defaultValue="") int user) throws IOException, URISyntaxException {
         StringBuilder sb = new StringBuilder();
