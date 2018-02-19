@@ -17,7 +17,7 @@ class Generator {
     void generateMovies() throws IOException {
         System.out.println("Generating movies!!");
         Files
-                .lines(ResourceUtils.getFile("classpath:data/movies.csv").toPath()).skip(1).forEach(payload -> {
+                .lines(ResourceUtils.getFile("classpath:data/movies_x.csv").toPath()).skip(1).forEach(payload -> {
             String[] data =  payload.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
             movies.addMovie(Integer.parseInt(data[0]), data[1]);
         });
@@ -26,7 +26,7 @@ class Generator {
     void generateUsers() throws IOException {
         System.out.println("Generating users!!");
         Files
-                .lines(ResourceUtils.getFile("classpath:data/ratings.csv").toPath()).skip(1).forEach(payload -> {
+                .lines(ResourceUtils.getFile("classpath:data/ratings_x.csv").toPath()).skip(1).forEach(payload -> {
             String[] data = payload.split(",");
             users.addUser(Integer.parseInt(data[0]), "User " + data[0]);
             User user = users.getUser(Integer.parseInt(data[0]));
