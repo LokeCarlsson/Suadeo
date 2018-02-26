@@ -53,9 +53,9 @@ class Recomender {
             }
         });
 
-        similarity.forEach((id, sim) -> {
-            if (userA.getId() != id) {
-                users.getUser(id).getRatings().forEach((movieId, rating) -> {
+        similarity.forEach((userId, sim) -> {
+            if (userA.getId() != userId) {
+                users.getUser(userId).getRatings().forEach((movieId, rating) -> {
                     if (weightedScores.containsKey(movieId)) {
                         weightedScores.replace(movieId, sim * rating + weightedScores.get(movieId));
                     } else {
@@ -67,17 +67,14 @@ class Recomender {
     }
 
     private void calculateSimSum(User userA) {
-        users.getUsers().forEach((id, user) -> {
-            user.getRatings().forEach((movieId, rating) -> {
-                if (userA.getId() != id) {
-                    double sim = similarity.get(id);
-                    if (similaritySum.containsKey(movieId)) {
-                        similaritySum.replace(movieId, similaritySum.get(movieId) + sim);
-                    } else {
-                        similaritySum.put(movieId, sim);
-                    }
+        movies.getMovies().forEach((id, movie) -> movie.getRatings().forEach((user, rating) -> {
+            if (user == userA.getId()) {
+                if (similaritySum.containsKey(id)) {
+                    similaritySum.replace(id, similaritySum.get(id) + similarity.get(user));
+                } else {
+                    similaritySum.put(id, similarity.get(user));
                 }
-            });
-        });
+            }
+        }));
     }
 }
